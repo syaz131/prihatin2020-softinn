@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Family App</title>
+</head>
+<body>
+
+    <div>
+        <h2>All Family</h2>
+        <ul id="families" />
+    </div>
+    <div>
+        <h2>Search by ID</h2>
+        <input type="text" id="familyId" size="5" />
+        <input type="button" value="Search" onclick="find();" />
+        <p id="family" />
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+    var uri = 'api/family';
+
+    $(document).ready(function () {
+      // Send an AJAX request
+      $.getJSON(uri)
+          .done(function (data) {
+            // On success, 'data' contains a list of products.
+            $.each(data, function (key, item) {
+              // Add a list item for the product.
+              $('<li>', { text: formatItem(item) }).appendTo($('#families'));
+            });
+          });
+    });
+
+    function formatItem(item) {
+      return item.Name + ': ' + item.Age +' years old';
+    }
+
+    function find() {
+      var id = $('#familyId').val();
+      $.getJSON(uri + '/' + id)
+          .done(function (data) {
+            $('#family').text(formatItem(data));
+          })
+          .fail(function (jqXHR, textStatus, err) {
+            $('#family').text('Error: ' + err);
+          });
+    }
+    </script>
+</body>
+</html>

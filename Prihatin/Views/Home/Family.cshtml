@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "Family - BPN";
+}
+<div class="page-header">
+    <ol class="breadcrumb">
+        <li>
+            <a href="/">Home</a>
+        </li>
+        <li class="active"> Family</li>
+    </ol>
+</div>
+
+<body ng-app="family" ng-cloak>
+    <h2>Family</h2>
+
+    <div ng-controller="MainCtrl" class="container">
+        <div class="row">
+            <form ng-model="forms">
+
+                <div ng-repeat="member in forms.familyMember">
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label class="control-label col-md-2">Name :</label>
+                        <div class="col-md-10">
+                            <input type="text" id="name" class="form-control" placeholder="e.g. Ahmad" required ng-model="member.name" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Age :</label>
+                        <div class="col-md-10">
+                            <input type="number" id="age" class="form-control" placeholder="e.g. 21" ng-change="checkAge(member.age)" required ng-model="member.age" />
+                            <span id="error_age" style="color:orangered;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Marital Status :</label>
+                        <div class="col-md-10">
+                            <select type="text" id="maritalStatus" class="form-control" required ng-model="member.maritalStatus">
+                                <option value="Single">Single</option>
+                                <option value="Married - Leader">Married - Leader</option>
+                                <option value="Married">Married</option>
+                                <option value="Widowed">Widowed</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Separated">Separated</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Occupation :</label>
+                        <div class="col-md-10">
+                            <select type="text" id="occupation" class="form-control" required ng-model="member.occupation">
+                                <option value="Doctor">Doctor</option>
+                                <option value="Police">Police</option>
+                                <option value="Student">Student</option>
+                                <option value="Civil Servant (Grade 56 and below)">Civil Servant (Grade 56 and below)</option>
+                                <option value="Civil Servant (Above Grade 56)">Civil Servant (Above Grade 56)</option>
+                                <option value="e-Hailing">e-Hailing</option>
+                                <option value="Taxi Driver">Taxi Driver</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Pensioner :</label>
+                        <div class="col-md-10">
+                            <select type="text" id="pensioner" class="form-control" required ng-model="member.pensioner">
+                                <option value="Not Pensioner">Not Pensioner</option>
+                                <option value="Pensioner">Pensioner</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Salary :</label>
+                        <div class="col-md-10">
+                            <input type="number" id="salary" class="form-control" placeholder="e.g. 3000" ng-change="checkSalary(member.salary)" required ng-model="member.salary" />
+                            <span id="error_salary" style="color:orangered;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Family Income :</label>
+                        <div class="col-md-10">
+                            <input type="number" id="familyIncome" class="form-control" placeholder="e.g. 3000" ng-change="checkFamIncome(member.familyIncome, member.salary, member.maritalStatus)" required ng-model="member.familyIncome" />
+                            <span id="error_famIncome" style="color:orangered;"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="calculate_button" style="margin-left: 14px;"
+                            ng-click="calculate(member,forms, $index)"
+                            ng-disabled="checkSubmitBtnDisable(member)">
+                        Submit
+                    </button>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" id="remove_button" style="margin-left: 14px; margin-top: 8px;" ng-click="addMember(forms)" ng-disabled="countForm == 1"><span class="glyphicon glyphicon-plus" style="margin-right: 7px;"></span> Add Family Member</button>
+                </div>
+            </form>
+            <hr />
+
+            <div class="col-md-10" ng-show="countPayment > 0" style="margin-top: 20px;">
+                <h4>Payment Qualified to be Received by each Family Member </h4>
+                <div class="table table-responsive">
+                    <table class="table table-hover table-striped table-condensed">
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Occupation Payment
+                            </th>
+                            <th>
+                                Pensioner Payment
+                            </th>
+                            <th>
+                                April Payment
+                            </th>
+                            <th>
+                                May Payment
+                            </th>
+                            <th>
+                                Total Payment
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+
+                        <tr ng-repeat="payment in forms.payments">
+                            <td>
+                                {{payment.Name}}
+                            </td>
+                            <td>
+                                RM {{payment.OccupationPayment}}
+                            </td>
+                            <td>
+                                RM {{payment.PensionerPayment}}
+                            </td>
+                            <td>
+                                RM {{payment.AprilPayment}}
+                            </td>
+                            <td>
+                                RM {{payment.MayPayment}}
+                            </td>
+                            <td>
+                                RM {{payment.TotalPayment}}
+                            </td>
+                            <td>
+                                <p><input type="button" class="btn btn-warning" id="remove_button" value="Remove Member" ng-click="removeMember(forms,$index)"></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div ng-show="countPayment > 0" style="margin-top: 60px; margin-bottom: 60px;">
+                    <h4>Total Payment Family Received  :  </h4>
+                    <h3>RM {{grandTotal}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script type="text/javascript" src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/familyController.js"></script>
